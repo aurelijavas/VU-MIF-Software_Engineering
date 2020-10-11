@@ -1,0 +1,448 @@
+<html>
+  <head>
+  <div>
+    <input type="radio" name="step" value="0" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="0">0</label>
+    <input type="radio" name="step" value="1" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="1">1</label>
+    <input type="radio" name="step" value="2" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="2">2</label>
+    <input type="radio" name="step" value="3" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="3">3</label>
+    <input type="radio" name="step" value="4" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="4">4</label>
+    <input type="radio" name="step" value="5" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="5">5</label>
+    <input type="radio" name="step" value="6" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="6">6</label>
+    <input type="radio" name="step" value="7" oninput="nextStep(this.value)" onchange="nextStep(this.value)>
+    <label for="7">7</label><br>
+  </div>
+  <script type="application/javascript">
+
+  function draw(step = 6) {
+      var canvas = document.getElementById('canvas');
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw border
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 0);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.closePath();
+        ctx.stroke();
+
+        drawF(step);
+    }
+
+    // Recursive draw
+    function drawF(step, color = null) {
+
+          var draw_color = false;
+          if (step > 0) {
+            if(color) {
+              draw_color = true;
+            }
+            step = step-1;
+
+            ctx.save();
+            ctx.transform(0, -0.5, -0.5, 0, 750, 0);
+            ctx.transform(0, 0.5, 0.5, 0, -250, 750);
+            ctx.transform(0, 1, 1, 0, 0, 0); // veidrodinis
+
+            if(draw_color) {
+              ctx.fillStyle = color;
+            } else {
+              ctx.fillStyle = "#FF0000";
+              color = "#FF0000";
+            }
+
+            drawF(step, color);
+            ctx.restore();
+            ctx.save();
+            ctx.transform(-0.5, 0, 0, 0.5, 250, 0);
+            ctx.transform(0, 1, 1, 0, 0, 0);
+            ctx.transform(0, -1, 1, 0, 0, 500); //pasuka 90 laipsniu
+
+            if(draw_color) {
+              ctx.fillStyle = color;
+            } else {
+              ctx.fillStyle = "#00FF00";
+              color = "#00FF00";
+            }
+
+            drawF(step, color);
+            ctx.restore();
+            ctx.save();
+            ctx.transform(-0.5, 0, 0, 0.5, 0, 250);
+            ctx.transform(-1, 0,0, -1, 0, 500);
+            ctx.transform(-1, 0,0, -1, 500, 500);
+            ctx.transform(0, 1, 1, 0, 0, 0);
+
+            if(draw_color) {
+              ctx.fillStyle = color;
+            } else {
+              ctx.fillStyle = "#0000FF";
+              color = "#0000FF";
+            }
+
+            drawF(step, color);
+            ctx.restore();
+            ctx.save();
+            ctx.transform(0.5, 0, 0, 0.5, 250, 250);
+            ctx.transform(0, 1, 1, 0, 0, 0);
+            ctx.transform(0, -1, 1, 0, 0, 500);
+
+            if(draw_color) {
+              ctx.fillStyle = color;
+            } else {
+              ctx.fillStyle = "#FF00FF";
+              color = "#FF00FF";
+            }
+
+            drawF(step, color);
+            ctx.restore();
+
+          } else drawMain();
+      }
+
+      function drawMain() {
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(200, 0);
+          ctx.lineTo(200, 250);
+          ctx.lineTo(500, 250);
+          ctx.lineTo(500, 500);
+          ctx.lineTo(0, 500);
+          ctx.fill();
+     }
+  }
+
+  function nextStep(step) {
+    draw(step);
+  }
+
+  function firstAnimation() {
+    var canvas = document.getElementById('canvas');
+
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+  			var pointX = 1;
+  			var pointY = 1;
+  			var pointXMin = 0.01;
+  			var pointYMin = 0.01;
+  			var STOP = 0;
+
+        placeXPlus = 10;
+        ctx.fillStyle="#00FF00";
+
+        draw_L();
+        ctx.fill();
+        var inter = setInterval(drawTrans, 50);
+        return
+    }
+
+      function drawBorder() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 0);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function draw_L() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 0);
+        ctx.lineTo(200, 250);
+        ctx.lineTo(500, 250);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.fill();
+      }
+
+      function drawTrans() {
+        ctx.save();
+        ctx.clearRect(0,0,500,500);
+        drawBorder();
+        ctx.beginPath();
+
+        ctx.scale(pointX, pointY);
+
+        draw_L();
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (STOP == 50) {
+          clearInterval(inter);
+          inter = 0;
+        } else {
+          pointX -= pointXMin;
+          pointY -= pointYMin;
+          STOP ++;
+        }
+      }
+  }
+
+  function secondAnimation() {
+    var canvas = document.getElementById('canvas');
+
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var mult = 0;
+  			var multChange = 0.1;
+  			var placeX = 0;
+  			var placeY = 0;
+  			var placeXPlus = 5;
+  			var placeYPlus = 5;
+  			var pointX = 1;
+  			var pointY = 1;
+  			var pointXMin = 0.01;
+  			var pointYMin = 0.01;
+  			var scale_need1 = 0;
+  			var STOP = 0;
+
+        ctx.fillStyle="#0000FF";
+
+        draw_L();
+        ctx.fill();
+        var inter = setInterval(drawTrans, 50);
+        return
+    }
+
+      function drawBorder() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 0);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function draw_L() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 0);
+        ctx.lineTo(200, 250);
+        ctx.lineTo(500, 250);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.fill();
+      }
+
+      function drawTrans() {
+        ctx.save();
+        ctx.clearRect(0,0,500,500);
+        drawBorder();
+        ctx.beginPath();
+
+        ctx.translate(placeX, placeY);
+        ctx.rotate(mult*Math.PI/2);
+        ctx.scale(pointX, pointY);
+
+        draw_L();
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (STOP == 50) {
+          clearInterval(inter);
+          inter = 0;
+        } else {
+          placeX += placeXPlus;
+          placeY += placeYPlus;
+          mult += multChange;
+          pointX -= pointXMin;
+          pointY -= pointYMin;
+          STOP ++;
+        }
+      }
+  }
+
+  function thirdAnimation() {
+    var canvas = document.getElementById('canvas');
+
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var mult = 4;
+  			var multChange = 0.04;
+  			var placeX = 0;
+  			var placeY = 0;
+  			var placeXPlus = 5;
+  			var placeYPlus = 5;
+  			var pointX = 1;
+  			var pointY = 1;
+  			var pointXMin = 0.01;
+  			var pointYMin = 0.03;
+  			var STOP = 0;
+
+        placeXPlus = 10;
+        ctx.fillStyle="#FF00FF";
+
+        draw_L();
+        ctx.fill();
+        var inter = setInterval(drawTrans, 50);
+        return
+    }
+
+      function drawBorder() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 0);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function draw_L() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 0);
+        ctx.lineTo(200, 250);
+        ctx.lineTo(500, 250);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.fill();
+      }
+
+      function drawTrans() {
+        ctx.save();
+        ctx.clearRect(0,0,500,500);
+        drawBorder();
+        ctx.beginPath();
+
+        /*translate - keičia piešimo tašką
+        rotate - pasuka
+        scale - pakeičia dydį*/
+        ctx.translate(placeX, placeY);
+        ctx.rotate(mult*Math.PI/2);
+        ctx.scale(pointX, pointY);
+
+        draw_L();
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (STOP == 50) {
+          clearInterval(inter);
+          inter = 0;
+        } else {
+          placeX += placeXPlus;
+          placeY += placeYPlus;
+          mult += multChange;
+          pointX -= pointXMin;
+          pointY -= pointYMin;
+          STOP ++;
+        }
+      }
+  }
+
+  function fourthAnimation() {
+    var canvas = document.getElementById('canvas');
+
+      if (canvas.getContext) {
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var mult = 4;
+      var multChange = 0.02;
+      var placeX = -125;//-150;
+      var placeY = 0;
+      var placeXPlus = 0;
+      var placeYPlus = 0;
+      var pointX = 1;
+      var pointY = 1;
+      var pointXMin = 0.015;
+      var pointYMin = 0.015;
+      var STOP = 0;
+
+
+        placeXPlus = 10;
+        ctx.fillStyle="#FF0000";
+
+      draw_L();
+      ctx.fill();
+
+      var inter = setInterval(drawTrans, 50);
+      return
+      }
+
+      function drawBorder() {
+        ctx.beginPath();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 0);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function draw_L() {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 0);
+        ctx.lineTo(200, 250);
+        ctx.lineTo(500, 250);
+        ctx.lineTo(500, 500);
+        ctx.lineTo(0, 500);
+        ctx.fill();
+      }
+
+      function drawTrans() {
+        ctx.save();
+        ctx.clearRect(0,0,500,500);
+        drawBorder();
+        ctx.beginPath();
+
+        ctx.translate(placeX, 0);
+        ctx.rotate(mult*Math.PI/2);
+        ctx.scale(pointX, pointY);
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+
+        draw_L();
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+        if(STOP == 50) {
+      clearInterval(inter);
+      inter = 0;
+    }
+
+
+        else {
+          placeX += placeXPlus;
+          placeY += placeYPlus;
+          mult += multChange;
+          pointX -= pointXMin;
+          pointY -= pointYMin;
+          STOP ++;
+        }
+      }
+  }
+
+  </script>
+  </head>
+  <body onload="draw();">
+    <canvas id="canvas" width="500" height="500"></canvas>
+  </body>
+  <div>
+      <br>
+      <button type="button" onclick="firstAnimation()">1st transform</button>
+      <button type="button" onclick="secondAnimation()">2nd transform</button>
+      <button type="button" onclick="thirdAnimation()">3rd transform</button>
+      <button type="button" onclick="fourthAnimation()">4th transform</button>
+  </div>
+</html>
