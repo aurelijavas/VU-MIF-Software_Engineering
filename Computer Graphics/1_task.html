@@ -20,7 +20,7 @@
   </div>
   <script type="application/javascript">
 
-  function draw(step = 6) {
+  function draw(step = 0) {
       var canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
@@ -49,10 +49,7 @@
             step = step-1;
 
             ctx.save();
-            ctx.transform(0, -0.5, -0.5, 0, 750, 0);
-            ctx.transform(0, 0.5, 0.5, 0, -250, 750);
-            ctx.transform(0, 1, 1, 0, 0, 0); // veidrodinis
-
+            ctx.transform(0, -0.25, -0.25, 0, 375, 125);
             if(draw_color) {
               ctx.fillStyle = color;
             } else {
@@ -63,9 +60,7 @@
             drawF(step, color);
             ctx.restore();
             ctx.save();
-            ctx.transform(-0.5, 0, 0, 0.5, 250, 0);
-            ctx.transform(0, 1, 1, 0, 0, 0);
-            ctx.transform(0, -1, 1, 0, 0, 500); //pasuka 90 laipsniu
+            ctx.transform(0.5, 0, 0, 0.5, 0, 0);
 
             if(draw_color) {
               ctx.fillStyle = color;
@@ -77,10 +72,7 @@
             drawF(step, color);
             ctx.restore();
             ctx.save();
-            ctx.transform(-0.5, 0, 0, 0.5, 0, 250);
-            ctx.transform(-1, 0,0, -1, 0, 500);
-            ctx.transform(-1, 0,0, -1, 500, 500);
-            ctx.transform(0, 1, 1, 0, 0, 0);
+            ctx.transform(0, 0.5, -0.5, 0, 250, 250);
 
             if(draw_color) {
               ctx.fillStyle = color;
@@ -92,9 +84,7 @@
             drawF(step, color);
             ctx.restore();
             ctx.save();
-            ctx.transform(0.5, 0, 0, 0.5, 250, 250);
-            ctx.transform(0, 1, 1, 0, 0, 0);
-            ctx.transform(0, -1, 1, 0, 0, 500);
+            ctx.transform(-0.5, 0, 0, 0.5, 500, 250);
 
             if(draw_color) {
               ctx.fillStyle = color;
@@ -113,8 +103,8 @@
 
           ctx.beginPath();
           ctx.moveTo(0, 0);
-          ctx.lineTo(200, 0);
-          ctx.lineTo(200, 250);
+          ctx.lineTo(125, 0);
+          ctx.lineTo(125, 250);
           ctx.lineTo(500, 250);
           ctx.lineTo(500, 500);
           ctx.lineTo(0, 500);
@@ -126,7 +116,7 @@
     draw(step);
   }
 
-  function firstAnimation() {
+  function Animation() {
     var canvas = document.getElementById('canvas');
 
     if (canvas.getContext) {
@@ -160,8 +150,8 @@
       function draw_L() {
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 250);
+        ctx.lineTo(125, 0);
+        ctx.lineTo(125, 250);
         ctx.lineTo(500, 250);
         ctx.lineTo(500, 500);
         ctx.lineTo(0, 500);
@@ -192,26 +182,19 @@
       }
   }
 
-  function secondAnimation() {
+  function firstAnimation() {
     var canvas = document.getElementById('canvas');
 
     if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        var mult = 0;
-  			var multChange = 0.1;
-  			var placeX = 0;
-  			var placeY = 0;
-  			var placeXPlus = 5;
-  			var placeYPlus = 5;
-  			var pointX = 1;
-  			var pointY = 1;
-  			var pointXMin = 0.01;
-  			var pointYMin = 0.01;
-  			var scale_need1 = 0;
-  			var STOP = 0;
+        var CW = canvas.width;
+        var scaling = 1;
+        var scalingMin = 0.01;
 
-        ctx.fillStyle="#0000FF";
+        var STOP = 0;
+
+        ctx.fillStyle="#00FF00";
 
         draw_L();
         ctx.fill();
@@ -219,55 +202,121 @@
         return
     }
 
-      function drawBorder() {
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(500, 0);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.closePath();
-        ctx.stroke();
+    function drawBorder() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(500, 0);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function draw_L() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(125, 0);
+      ctx.lineTo(125, 250);
+      ctx.lineTo(500, 250);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.fill();
+    }
+
+    function drawTrans() {
+
+      ctx.save();
+      ctx.clearRect(0,0,500,500);
+      drawBorder();
+      ctx.beginPath();
+      //ctx.transform(1, 0, 0, 1, 0, 0);
+      //ctx.transform(0.5, 0, 0, 0.5, 0, 0);
+      ctx.transform(scaling, 0, 0, scaling, 0, 0);
+      draw_L();
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      if (STOP == 50) {
+        clearInterval(inter);
+        inter = 0;
+      } else {
+        scaling -= scalingMin;
+        STOP ++;
       }
-
-      function draw_L() {
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 250);
-        ctx.lineTo(500, 250);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.fill();
-      }
-
-      function drawTrans() {
-        ctx.save();
-        ctx.clearRect(0,0,500,500);
-        drawBorder();
-        ctx.beginPath();
-
-        ctx.translate(placeX, placeY);
-        ctx.rotate(mult*Math.PI/2);
-        ctx.scale(pointX, pointY);
-
-        draw_L();
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-
-        if (STOP == 50) {
-          clearInterval(inter);
-          inter = 0;
-        } else {
-          placeX += placeXPlus;
-          placeY += placeYPlus;
-          mult += multChange;
-          pointX -= pointXMin;
-          pointY -= pointYMin;
-          STOP ++;
-        }
-      }
+    }
   }
+
+function secondAnimation(){
+  var canvas = document.getElementById('canvas');
+
+  if (canvas.getContext) {
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var CW = canvas.width;
+      var scaling = 1;
+      var scalingMin = 0.02;
+      var hSkewing = 0;
+      var vSkewing = 0;
+      var skewingMin = 0.01;
+      var moving = 0;
+      var movingMin = 5;
+
+      var STOP = 0;
+
+      ctx.fillStyle="#0000FF";
+
+      draw_L();
+      ctx.fill();
+      var inter = setInterval(drawTrans, 50);
+      return
+  }
+
+  function drawBorder() {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(500, 0);
+    ctx.lineTo(500, 500);
+    ctx.lineTo(0, 500);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  function draw_L() {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(125, 0);
+    ctx.lineTo(125, 250);
+    ctx.lineTo(500, 250);
+    ctx.lineTo(500, 500);
+    ctx.lineTo(0, 500);
+    ctx.fill();
+  }
+
+  function drawTrans() {
+
+    ctx.save();
+    ctx.clearRect(0,0,500,500);
+    drawBorder();
+    ctx.beginPath();
+    ctx.transform(scaling, hSkewing, vSkewing, scaling, moving, moving);
+    draw_L();
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    if (STOP == 50) {
+      clearInterval(inter);
+      inter = 0;
+    } else {
+      scaling -= scalingMin;
+      hSkewing += skewingMin;
+      vSkewing -= skewingMin;
+      moving += movingMin;
+      STOP ++;
+    }
+  }
+}
 
   function thirdAnimation() {
     var canvas = document.getElementById('canvas');
@@ -275,19 +324,18 @@
     if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        var mult = 4;
-  			var multChange = 0.04;
-  			var placeX = 0;
-  			var placeY = 0;
-  			var placeXPlus = 5;
-  			var placeYPlus = 5;
-  			var pointX = 1;
-  			var pointY = 1;
-  			var pointXMin = 0.01;
-  			var pointYMin = 0.03;
-  			var STOP = 0;
+        var CW = canvas.width;
+        var hScaling = 1;
+        var vScaling = 1;
+        var hScalingMin = 0.03;
+        var vScalingMin = 0.01;
+        var hMoving = 0;
+        var vMoving = 0;
+        var hMovingMin = 10;
+        var vMovingMin = 5;
 
-        placeXPlus = 10;
+        var STOP = 0;
+
         ctx.fillStyle="#FF00FF";
 
         draw_L();
@@ -296,141 +344,122 @@
         return
     }
 
-      function drawBorder() {
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(500, 0);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.closePath();
-        ctx.stroke();
+    function drawBorder() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(500, 0);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function draw_L() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(125, 0);
+      ctx.lineTo(125, 250);
+      ctx.lineTo(500, 250);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.fill();
+    }
+
+    function drawTrans() {
+
+      ctx.save();
+      ctx.clearRect(0,0,500,500);
+      drawBorder();
+      ctx.beginPath();
+      ctx.transform(hScaling, 0, 0, vScaling, hMoving, vMoving);
+      draw_L();
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      if (STOP == 50) {
+        clearInterval(inter);
+        inter = 0;
+      } else {
+        hScaling -= hScalingMin;
+        vScaling -= vScalingMin;
+        hMoving += hMovingMin;
+        vMoving += vMovingMin;
+        STOP ++;
       }
-
-      function draw_L() {
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 250);
-        ctx.lineTo(500, 250);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.fill();
-      }
-
-      function drawTrans() {
-        ctx.save();
-        ctx.clearRect(0,0,500,500);
-        drawBorder();
-        ctx.beginPath();
-
-        /*translate - keičia piešimo tašką
-        rotate - pasuka
-        scale - pakeičia dydį*/
-        ctx.translate(placeX, placeY);
-        ctx.rotate(mult*Math.PI/2);
-        ctx.scale(pointX, pointY);
-
-        draw_L();
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-
-        if (STOP == 50) {
-          clearInterval(inter);
-          inter = 0;
-        } else {
-          placeX += placeXPlus;
-          placeY += placeYPlus;
-          mult += multChange;
-          pointX -= pointXMin;
-          pointY -= pointYMin;
-          STOP ++;
-        }
-      }
+    }
   }
 
   function fourthAnimation() {
     var canvas = document.getElementById('canvas');
 
-      if (canvas.getContext) {
-      var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      var mult = 4;
-      var multChange = 0.02;
-      var placeX = -125;//-150;
-      var placeY = 0;
-      var placeXPlus = 0;
-      var placeYPlus = 0;
-      var pointX = 1;
-      var pointY = 1;
-      var pointXMin = 0.015;
-      var pointYMin = 0.015;
-      var STOP = 0;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var CW = canvas.width;
+        var scaling = 1;
+        var scalingMin = 0.02;
+        var skewing = 0;
+        var skewingMin = 0.005;
+        var hMoving = 0;
+        var vMoving = 0;
+        var hMovingMin = 7.5;
+        var vMovingMin = 2.5;
 
+        var STOP = 0;
 
-        placeXPlus = 10;
         ctx.fillStyle="#FF0000";
 
-      draw_L();
-      ctx.fill();
-
-      var inter = setInterval(drawTrans, 50);
-      return
-      }
-
-      function drawBorder() {
-        ctx.beginPath();
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(500, 0);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.closePath();
-        ctx.stroke();
-      }
-
-      function draw_L() {
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 250);
-        ctx.lineTo(500, 250);
-        ctx.lineTo(500, 500);
-        ctx.lineTo(0, 500);
-        ctx.fill();
-      }
-
-      function drawTrans() {
-        ctx.save();
-        ctx.clearRect(0,0,500,500);
-        drawBorder();
-        ctx.beginPath();
-
-        ctx.translate(placeX, 0);
-        ctx.rotate(mult*Math.PI/2);
-        ctx.scale(pointX, pointY);
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
-
         draw_L();
-        ctx.closePath();
         ctx.fill();
-        ctx.restore();
-        if(STOP == 50) {
-      clearInterval(inter);
-      inter = 0;
+        var inter = setInterval(drawTrans, 50);
+        return
     }
 
+    function drawBorder() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(500, 0);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.closePath();
+      ctx.stroke();
+    }
 
-        else {
-          placeX += placeXPlus;
-          placeY += placeYPlus;
-          mult += multChange;
-          pointX -= pointXMin;
-          pointY -= pointYMin;
-          STOP ++;
-        }
+    function draw_L() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(125, 0);
+      ctx.lineTo(125, 250);
+      ctx.lineTo(500, 250);
+      ctx.lineTo(500, 500);
+      ctx.lineTo(0, 500);
+      ctx.fill();
+    }
+
+    function drawTrans() {
+
+      ctx.save();
+      ctx.clearRect(0,0,500,500);
+      drawBorder();
+      ctx.beginPath();
+      ctx.transform(scaling, skewing, skewing, scaling, hMoving, vMoving);
+      draw_L();
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      if (STOP == 50) {
+        clearInterval(inter);
+        inter = 0;
+      } else {
+        scaling -= scalingMin;
+        skewing -= skewingMin;
+        hMoving += hMovingMin;
+        vMoving += vMovingMin;
+        STOP ++;
       }
+    }
   }
 
   </script>
