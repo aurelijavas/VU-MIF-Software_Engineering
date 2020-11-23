@@ -199,6 +199,8 @@ function createStairs(scene, newStairCount, newRotation) {
     }
     var handrailSupportGeometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(handRailPoints), 80, 0.2, 8, false);
     var handrail = new THREE.Mesh(handrailSupportGeometry, stairSupportMaterial);
+    handrail.castShadow = true;
+    handrail.receiveShadow = true;
     scene.add(handrail);
 
     addLightsAndShadows(scene);   
