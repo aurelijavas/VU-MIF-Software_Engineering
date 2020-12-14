@@ -89,9 +89,6 @@
     }
 
 		var gui = new dat.GUI();
-    gui.add(controls, 'R', 5, 20).onChange(controls.update);
-		gui.add(controls, 'h', 5, 30).onChange(controls.update);
-    gui.add(controls, 'points', 500, 3000).onChange(controls.update);
 		gui.add(controls, 'redraw');
 
 		generatePoints();
@@ -113,32 +110,10 @@
 				}
 			}
 
-      for (var i = 0; i < controls.points; i++) {
-
-        var x = -R + (Math.random() * R*2);
-        var y = (h/2);
-        var z = -R + (Math.random() * R*2);
-
-        if(Math.abs(x*x + z*z <= R*R)) {
-          points.push(new THREE.Vector3(x, y, z));
-        }
-      }
-
-			for (var i = 0; i < controls.points; i++) {
-
-				var x = -R + (Math.random() * R*2);
-				var y = 0;
-				var z = -R + (Math.random() * R*2);
-
-				if(Math.abs(x*x + z*z <= R*R)) {
-					points.push(new THREE.Vector3(x, y, z));
-				}
-			}
-
 			spGroup = new THREE.Object3D();
 			var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
 			points.forEach(function (point) {
-				var spGeom = new THREE.SphereGeometry(0.02);
+				var spGeom = new THREE.SphereGeometry(0.03);
 				var spMesh = new THREE.Mesh(spGeom, material);
 				spMesh.position = point;
 				spGroup.add(spMesh);
